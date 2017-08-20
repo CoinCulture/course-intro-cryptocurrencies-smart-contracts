@@ -1,18 +1,11 @@
 const bitcoin = require('bitcoinjs-lib')
+const {hexLength, lenPrefixedHex, ops} = require('./util')
 
 var addr = 'mh8tGnF6RCsnWUMTw1WL9UWjjgyMRRTM8t'
 var wif = 'cT8gHG8a3gHPBDDLve4A6SKUjTQwNnJ3A3oGjzrqZmXGQJ7dfmQ6'
-var txid = 'f5b51806b633970d299ccf5301f0f0b8f50ad06494750bb63507a6f86920318e'
+var txid = 'b1c5d5a3ff0d0c23cf9ee42e34c60888dc699ef26b516855468f2dd7e5cc73a5'
 var txOutput = 0
-var amount = 124000000
-
-var OP_DUP = '76'
-
-var OP_HASH160 = 'A9'
-var OP_CHECKSIG = 'AC'
-
-var OP_EQUAL = '87'
-var OP_EQUALVERIFY = '88'
+var amount = 123600000
 
 var keyPair = bitcoin.ECPair.fromWIF(wif, bitcoin.networks.testnet);
 
@@ -24,18 +17,12 @@ HASH160 = bitcoin.address.fromBase58Check(addr).hash.toString('hex')
 
 // form the redeem script in hex
 // its just a simple p2pkh
-
-function hexLength(s) {
-  len = s.length / 2
-  return len.toString(16)
-}
-
-redeemScriptHex = OP_DUP + OP_HASH160 + hexLength(HASH160) + HASH160 + OP_EQUALVERIFY + OP_CHECKSIG
+redeemScriptHex = ops.OP_DUP + ops.OP_HASH160 + lenPrefixedHex(HASH160) + ops.OP_EQUALVERIFY + ops.OP_CHECKSIG
 redeemScript =  new Buffer(redeemScriptHex, "hex")
 scriptHash = bitcoin.crypto.hash160(redeemScript).toString('hex')
 
 
-scriptPubKeyHex = OP_HASH160 + hexLength(scriptHash) + scriptHash + OP_EQUAL
+scriptPubKeyHex = ops.OP_HASH160 + lenPrefixedHex(scriptHash) + ops.OP_EQUAL
 scriptPubKey = new Buffer(scriptPubKeyHex, "hex")
 
 
@@ -62,7 +49,7 @@ tx.sign(0, keyPair, redeemScript) //redeemScript)
 sig = tx.inputs[0].signatures[0].toString('hex')
 pubHex = keyPair.getPublicKeyBuffer().toString('hex')
 
-var scriptSigHex = hexLength(sig) + sig + hexLength(pubHex) + pubHex + hexLength(redeemScriptHex) + redeemScriptHex
+var scriptSigHex = lenPrefixedHex(sig) + lenPrefixedHex(pubHex) + lenPrefixedHex(redeemScriptHex) 
 
 let builtTx = tx.build()
 
