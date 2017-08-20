@@ -13,10 +13,12 @@ var pubKey = keyPair.getPublicKeyBuffer().toString('hex')
 // decode the b58check encoded address to hex
 HASH160 = bitcoin.address.fromBase58Check(addr).hash.toString('hex')
 
+scriptPubKey = p2pkh(HASH160)
+
 let tx = new bitcoin.Transaction() 
 txHash = Buffer.from(txid, 'hex').reverse() // txhash is reversed because bitcoin is crazy
 tx.addInput(txHash, txOutput, null, null) 
-tx.addOutput(p2pkh(HASH160), amount)
+tx.addOutput(scriptPubKey, amount)
 
 hashType = bitcoin.Transaction.SIGHASH_ALL
 signatureHash = tx.hashForSignature(0, scriptPubKey, hashType)
