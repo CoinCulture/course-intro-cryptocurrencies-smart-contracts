@@ -1,41 +1,30 @@
 const bitcoin = require('bitcoinjs-lib')
-const {lenPrefixedHex, ops} = require('./util')
+const {lenPrefixedHex, ops, p2pkh} = require('./util')
 
-var addr = 'msMgWGsQP5NpHs8WLpSjHvqtHu8hDmJcK3'
-var wif = 'cSfkvBMC9jufxA9bMKfKgnBkofG4njheRnrj148HMDJoiUumuGs1'
-var txid = '9dbf51db1b575b58d200335908d1e69dd820dca5b6956b6a6edcf1cfbe61904f'
+var addr = 'mh8tGnF6RCsnWUMTw1WL9UWjjgyMRRTM8t'
+var wif = 'cT8gHG8a3gHPBDDLve4A6SKUjTQwNnJ3A3oGjzrqZmXGQJ7dfmQ6'
+var txid = '4a09ffa81e2c0c1a0e5c513dcfd9ffbc848cc2198997a910c1c8d674c22e0825'
 var txOutput = 0
-var amount = 129800000
+var amount = 123400000
 
 var keyPair = bitcoin.ECPair.fromWIF(wif, bitcoin.networks.testnet);
-
-let tx = new bitcoin.TransactionBuilder(bitcoin.networks.testnet)
-
-// form the scriptSig in hex
-
-// build the raw input
-// note we call addInput on the inner tx, which takes a (hash, index, sequence, scriptSig) rather than just a hash and index
-//tx.addInput(txid, txOutput)
-tx.addInput(txid, txOutput, null, null) 
+var pubKey = keyPair.getPublicKeyBuffer().toString('hex')
 
 // decode the b58check encoded address to hex
 HASH160 = bitcoin.address.fromBase58Check(addr).hash.toString('hex')
 
-// form the scriptPubKey in hex
-scriptPubKeyHex = ops.OP_DUP + ops.OP_HASH160 + lenPrefixedHex(HASH160) + ops.OP_EQUALVERIFY + ops.OP_CHECKSIG
-scriptPubKey =  new Buffer(scriptPubKeyHex, "hex")
+let tx = new bitcoin.Transaction() 
+txHash = Buffer.from(txid, 'hex').reverse() // txhash is reversed because bitcoin is crazy
+tx.addInput(txHash, txOutput, null, null) 
+tx.addOutput(p2pkh(HASH160), amount)
 
-// note we call addOutput on the inner tx, which takes a scriptPubKey rather than just an addr
-// tx.addOutput(addr, amount)
-tx.tx.addOutput(scriptPubKey, amount)
+hashType = bitcoin.Transaction.SIGHASH_ALL
+signatureHash = tx.hashForSignature(0, scriptPubKey, hashType)
+sig = keyPair.sign(signatureHash).toScriptSignature(hashType)
 
-tx.sign(0, keyPair);
+var scriptSigHex = lenPrefixedHex(sig.toString('hex')) + lenPrefixedHex(pubKey)
+tx.ins[0].script = new Buffer(scriptSigHex, "hex")
 
-console.log("---------- TRANSACTION STRUCTURE ---------")
-console.log("")
-console.log(tx.build())
-console.log("")
-console.log("---------- TRANSACTION HEX ---------")
-console.log("")
-console.log(tx.build().toHex());
+
+console.log(tx.toHex())
 

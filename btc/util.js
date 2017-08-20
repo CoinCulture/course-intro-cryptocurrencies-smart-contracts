@@ -15,9 +15,17 @@ function lenPrefixedHex(s) {
 	return hexLength(s) + s
 }
 
+// returns scriptPubKey Buffer for p2pkh
+function p2pkh(addr) {
+ 	scriptPubKeyHex = hexOps.OP_DUP + hexOps.OP_HASH160 + lenPrefixedHex(addr) + hexOps.OP_EQUALVERIFY + hexOps.OP_CHECKSIG
+  	scriptPubKey =  new Buffer(scriptPubKeyHex, "hex")
+	return scriptPubKey
+}
+
 module.exports = {
 	hexLength: hexLength,
 	lenPrefixedHex: lenPrefixedHex,
-	ops: hexOps
+	ops: hexOps,
+	p2pkh: p2pkh
 }
 
