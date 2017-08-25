@@ -3,9 +3,9 @@ const {hexLength, lenPrefixedHex, ops, p2pkh } = require('./util')
 
 var addr = 'mh8tGnF6RCsnWUMTw1WL9UWjjgyMRRTM8t'
 var wif = 'cT8gHG8a3gHPBDDLve4A6SKUjTQwNnJ3A3oGjzrqZmXGQJ7dfmQ6'
-var txid = '0c3855bbeb9de4ef8e507f28dc69d42ca54dcfca3e36ef3bb527fac54cdd216a'
+var txid = 'b2518fb9bacf0b3ed95f77dc338d36d2a970d24c92ad5f711a66d2d3bc9add52'
 var txOutput = 0
-var amount = 121000000
+var amount = 64000000
 
 var keyPair = bitcoin.ECPair.fromWIF(wif, bitcoin.networks.testnet);
 var keyPair2 = bitcoin.ECPair.fromWIF('cTCtFzdHgkWbbRy8tmth4aPLrNkEaTUvYYjHtyDwUViJ9CJg8WG9', bitcoin.networks.testnet);
@@ -62,7 +62,7 @@ signatureHash = tx.hashForSignature(0, redeemScript, hashType)
 sig1 = keyPair.sign(signatureHash).toScriptSignature(hashType).toString('hex')
 sig2 = keyPair2.sign(signatureHash).toScriptSignature(hashType).toString('hex')
 
-var scriptSigHex = '00' + lenPrefixedHex(sig1) + lenPrefixedHex(sig2) +  lenPrefixedHex(redeemScriptHex) 
+var scriptSigHex = ops.OP_FALSE + lenPrefixedHex(sig1) + lenPrefixedHex(sig2) +  lenPrefixedHex(redeemScriptHex) 
 tx.ins[0].script = new Buffer(scriptSigHex, "hex")
 
 
