@@ -2,10 +2,10 @@ const bitcoin = require('bitcoinjs-lib')
 
 
 var addr = 'mh8tGnF6RCsnWUMTw1WL9UWjjgyMRRTM8t'
-var wif = 'cPpM64Hjw3nfqFwSayLgX4uwbd4RLvojBA5yc13fStXJdE1khjyZ'
-var txid = '740094326cdcc3c8bd9ca260d26d72e401878737465facccc94b65b2aaf4f597'
-var txOutput = 1
-var amount = 128000000
+var wif = 'cT8gHG8a3gHPBDDLve4A6SKUjTQwNnJ3A3oGjzrqZmXGQJ7dfmQ6'
+var txid = '09aeab096126f5fd122e83ae393977ba6e97f1d700928a0d6d53ddfe8a0e28ea'
+var txOutput = 42
+var amount = 530300000
 
 var keyPair = bitcoin.ECPair.fromWIF(wif, bitcoin.networks.testnet);
 

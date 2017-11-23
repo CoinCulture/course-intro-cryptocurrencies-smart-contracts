@@ -3,9 +3,9 @@ const {hexLength, lenPrefixedHex, ops, p2pkh } = require('./util')
 
 var addr = 'mh8tGnF6RCsnWUMTw1WL9UWjjgyMRRTM8t'
 var wif = 'cT8gHG8a3gHPBDDLve4A6SKUjTQwNnJ3A3oGjzrqZmXGQJ7dfmQ6'
-var txid = 'f20cca9a02d68aa993f244dcfba19c817134e8eda10d81009f68f0df7ac38500'
+var txid = '9dfe56a947109aeaadf8ceb7487930a99b4374ab65ae83e31eeea8fcc4642b1e'
 var txOutput = 0
-var amount = 119000000
+var amount = 529500000
 
 var keyPair = bitcoin.ECPair.fromWIF(wif, bitcoin.networks.testnet);
 var keyPair2 = bitcoin.ECPair.fromWIF('cTCtFzdHgkWbbRy8tmth4aPLrNkEaTUvYYjHtyDwUViJ9CJg8WG9', bitcoin.networks.testnet);
